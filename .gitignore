@@ -1,0 +1,10 @@
+﻿
+
+
+.settings
+*.jar
+*.exe
+/ target /
+/node_modules/
+.idea
+/ resources/
