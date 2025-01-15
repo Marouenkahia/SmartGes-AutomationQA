@@ -7,22 +7,9 @@ pool:
   name: 'Default'  # Le nom du pool local où vous avez configuré votre agent auto-hébergé
   
 
-variables:
-  mavenOptions: '-Xmx3072m'  # Options de mémoire pour Maven
-
 steps:
 # Étape 1: Récupérer le code source
 - task: Checkout@1
   inputs:
     repository: self  # Utilise le dépôt actuel du pipeline
     fetchDepth: 1  # Limite la profondeur du clone à 1 (récupère seulement le dernier commit)
-
-# Étape 2: Exécuter Maven pour construire le projet
-- task: Maven@3
-  inputs:
-    mavenPomFile: 'pom.xml'  # Fichier pom.xml à la racine de votre projet
-    goals: 'clean install'  # Objectifs Maven (nettoyage et installation)
-    options: $(mavenOptions)  # Utiliser les options définies pour Maven
-    javaHomeOption: 'JDKVersion'  # Définir la version JDK
-    jdkVersionOption: '21'  # Utiliser JDK 11
-    jdkArchitectureOption: 'x64'  # Utiliser l'architecture x64
