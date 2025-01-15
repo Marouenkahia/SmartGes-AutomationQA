@@ -1,14 +1,24 @@
 trigger:
-- main
+- main  # Déclencher le pipeline sur les changements dans la branche main
 
 pool:
-  name: Default
-
-resources:
-  repositories:
-    - repository: self
-      type: git
+  name: Default  # Utiliser le pool Default
 
 steps:
-- checkout: self
-  fetchDepth: 1
+# Checkout du code source depuis le dépôt
+- checkout: self  # Cette ligne garantit que le code sera cloné
+
+# Étape Maven pour construire le projet et exécuter les tests
+- task: Maven@3
+  inputs:
+    mavenPomFile: 'pom.xml'  # Chemin vers votre fichier pom.xml
+    options: '-DskipTests=false'  # Ne pas ignorer les tests
+    goals: 'clean test'  # Exécuter les tests après le nettoyage du projet
+    jdkVersionOption: '21'  # Spécifiez la version JDK que vous utilisez
+
+# Publier les résultats des tests dans Azure DevOps
+- task: PublishTestResults@2
+  inputs:
+    testResultsFiles: '**/TEST-*.xml'  # Publier les résultats des tests générés
+    testRunTitle: 'Selenium Tests'  # Titre des résultats des tests
+    mergeTestResults: true  # Fusionner les résultats des tests si plusieurs fichiers sont trouvés
