@@ -1,16 +1,12 @@
-# Maven
-# Build your Java project and run tests with Apache Maven.
-# Add steps that analyze code, save build artifacts, deploy, and more:
-# https://docs.microsoft.com/azure/devops/pipelines/languages/java
-
-trigger:
-- main
-
 pool:
-  name: 'windows-latest'
+  vmImage: 'windows-latest'
 
 steps:
-  - task: Maven@3
-    inputs:
-      mavenPomFile: 'pom.xml'
-      goals: 'clean install'
+- task: MavenAuthenticate@0
+  inputs:
+    mavenFeed: '$(MavenFeed)'
+- task: Maven@3
+  inputs:
+    mavenPomFile: 'pom.xml'
+    options: '-X'
+    goals: 'clean install'
