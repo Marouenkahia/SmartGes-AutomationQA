@@ -1,24 +1,26 @@
 trigger:
-- main  # Déclencher le pipeline sur les changements dans la branche main
+- main  # Déclenche le pipeline sur les changements dans la branche main
 
 pool:
   name: Default  # Utiliser le pool Default
 
 steps:
-# Checkout du code source depuis le dépôt
-- checkout: self  # Cette ligne garantit que le code sera cloné
+  # Tâche de checkout pour récupérer le code source
+  - task: Checkout@1
+    inputs:
+      repository: self  # Utilise le dépôt actuel du pipeline (self)
+      fetchDepth: 1  # Limite la profondeur du clone pour ne récupérer que les derniers commits
 
-# Étape Maven pour construire le projet et exécuter les tests
-- task: Maven@3
-  inputs:
-    mavenPomFile: 'pom.xml'  # Chemin vers votre fichier pom.xml
-    options: '-DskipTests=false'  # Ne pas ignorer les tests
-    goals: 'clean test'  # Exécuter les tests après le nettoyage du projet
-    jdkVersionOption: '21'  # Spécifiez la version JDK que vous utilisez
+  # Tâche Maven pour nettoyer et exécuter les tests
+  - task: Maven@3
+    inputs:
+      mavenPomFile: 'pom.xml'  # Le chemin vers votre fichier pom.xml
+      goals: 'clean test'  # Les objectifs Maven que vous souhaitez exécuter (ex : clean et test)
+      options: '-DskipTests=false'  # Assurez-vous que les tests sont exécutés (optionnel)
 
-# Publier les résultats des tests dans Azure DevOps
-- task: PublishTestResults@2
-  inputs:
-    testResultsFiles: '**/TEST-*.xml'  # Publier les résultats des tests générés
-    testRunTitle: 'Selenium Tests'  # Titre des résultats des tests
-    mergeTestResults: true  # Fusionner les résultats des tests si plusieurs fichiers sont trouvés
+  # Publier les résultats des tests dans Azure DevOps
+  - task: PublishTestResults@2
+    inputs:
+      testResultsFiles: '**/TEST-*.xml'  # Publier les résultats des tests générés
+      testRunTitle: 'Selenium Tests'  # Titre des résultats des tests
+      mergeTestResults: true  # Fusionner les résultats des tests si plusieurs fichiers sont trouvés
