@@ -2,10 +2,13 @@ trigger:
 - main
 
 pool:
-  name: 'Default'  # Ou 'Azure Pipelines' pour un agent hébergé par Azure
+  name: Default
+
+resources:
+  repositories:
+    - repository: self
+      type: git
 
 steps:
-- task: Maven@3
-  inputs:
-    mavenPomFile: 'pom.xml'
-    goals: 'clean install'
+- checkout: self
+  fetchDepth: 1
