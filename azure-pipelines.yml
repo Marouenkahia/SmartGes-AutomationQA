@@ -1,12 +1,11 @@
+trigger:
+- main
+
 pool:
-  vmImage: 'windows-latest'
+  name: 'Default'  # Ou 'Azure Pipelines' pour un agent hébergé par Azure
 
 steps:
-- task: MavenAuthenticate@0
-  inputs:
-    mavenFeed: '$(MavenFeed)'
 - task: Maven@3
   inputs:
     mavenPomFile: 'pom.xml'
-    options: '-X'
     goals: 'clean install'
